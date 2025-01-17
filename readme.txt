@@ -18,5 +18,10 @@ License: Private
 * Initial release.
 
 
+== Changelog ==
+= 2.0 =
+* Fix Major Issue Not Updating the Product variant arrtriburtes.<br>
+
+
 == Credits ==
 CP Technologies

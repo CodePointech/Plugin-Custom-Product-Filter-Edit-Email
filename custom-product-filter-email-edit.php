@@ -2,7 +2,7 @@
 /*
 Plugin Name: Custom Product Filter-Email-Edit
 Description: Dynamically fetch and add filters by product variant attributes (size and color) to the WooCommerce Orders admin panel and send a email to customer to edit the product if it is out of stock.
-Version: 1.0
+Version: 2.0
 Author: CP Technologies
 */
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ function enqueue_bulk_action_popup_script() {
         'custom-bulk-action-popup',
         plugin_dir_url(__FILE__) . 'assets/custom-bulk-action-popup.js',
         array('jquery'),
-        '1.0',
+        '2.0',
         true
     );
 
@@ -255,6 +255,31 @@ function handle_bulk_email_sending() {
 
     wp_send_json_success(array('message' => 'Emails sent successfully.'));
 }
+
+
+// add_action( 'woocommerce_email_footer', 'add_custom_order_button_to_order_confirmation', 10, 1 );
+
+// function add_custom_order_button_to_order_confirmation( $email ) {
+//     if ($email instanceof WC_Email && $email->id === 'customer_processing_order') {
+//         $order = $email->object;
+//         $order_id = $order->get_id();
+
+//         $order_hash = md5($order_id . $order->get_date_created()->getTimestamp() . $order->get_total());
+//         update_post_meta($order_id, '_order_hash', $order_hash);
+
+//         $order_link = esc_url(
+//             add_query_arg(
+//                 ['order_hash' => $order_hash],
+//                 home_url('/order-edit')
+//             )
+//         );
+
+//         $button_html = '<a href="' . $order_link . '" style="border: 2px solid black; background-color: white; color: black; padding: 10px 20px; font-size: 16px; border-radius: 20px; margin-bottom: 20px; cursor: pointer; text-decoration: none;">Endre ordre</a>';
+//         $email->email_message .= $button_html;
+//     }
+// }
+
+
 
 
 

@@ -1,11 +1,4 @@
 <?php
-/**
- * Plugin Name: Order Details with Out-of-Stock Products
- * Description: A plugin to render order details including out-of-stock products and allow users to update sizes and colors.
- * Version: 1.0
- * Author: Your Name
- * License: GPL2
- */
 
 // Register the shortcode to display order details and out-of-stock products
 function render_order_details_with_out_of_stock_products_shortcode() {
@@ -230,54 +223,65 @@ add_shortcode('order_details_out_of_stock', 'render_order_details_with_out_of_st
 add_action('wp_ajax_update_product_sizes', 'update_product_sizes');
 add_action('wp_ajax_nopriv_update_product_sizes', 'update_product_sizes');
 
-// Function to update product sizes
 function update_product_sizes() {
     $order_id = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
     $product_sizes = isset($_POST['product_sizes']) ? $_POST['product_sizes'] : [];
     $product_colors = isset($_POST['product_colors']) ? $_POST['product_colors'] : [];
-    $legTilNavs = isset($_POST['leg_Til_Navs']) ? $_POST['leg_Til_Navs'] : [];
+    $leg_Til_Navs = isset($_POST['leg_Til_Navs']) ? $_POST['leg_Til_Navs'] : [];
 
-    if ($order_id && !empty($product_sizes)) {
-        global $wpdb;
+    //error_log('Received Data: ' . print_r($_POST, true));
+	//error_log('$product_sizes: ' . print_r($product_sizes, true));
 
-        foreach ($product_sizes as $product_id => $size) {
-            $item_id = get_order_item_id_by_product_id($order_id, $product_id);
-            if ($item_id) {
-                $wpdb->update(
-                    $wpdb->prefix . 'woocommerce_order_itemmeta',
-                    ['meta_value' => $size],
-                    ['order_item_id' => $item_id, 'meta_key' => 'pa_storrelse']
-                );
-            }
-        }
-
-        foreach ($product_colors as $product_id => $color) {
-            $item_id = get_order_item_id_by_product_id($order_id, $product_id);
-            if ($item_id) {
-                $wpdb->update(
-                    $wpdb->prefix . 'woocommerce_order_itemmeta',
-                    ['meta_value' => $color],
-                    ['order_item_id' => $item_id, 'meta_key' => 'pa_farge']
-                );
-            }
-        }
-
-        foreach ($legTilNavs as $product_id => $value) {
-            $item_id = get_order_item_id_by_product_id($order_id, $product_id);
-            if ($item_id) {
-                $wpdb->update(
-                    $wpdb->prefix . 'woocommerce_order_itemmeta',
-                    ['meta_value' => $value],
-                    ['order_item_id' => $item_id, 'meta_key' => 'LeggTilNavn']
-                );
-            }
-        }
-
-        wp_send_json_success();
-    } else {
-        wp_send_json_error();
+    if (!$order_id) {
+        wp_send_json_error(['message' => 'Invalid order ID.']);
+        return;
     }
+
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        wp_send_json_error(['message' => 'Order not found.']);
+        return;
+    }
+	
+	
+	//error_log('$product_items: ' . print_r($order->get_items(), true));
+    foreach ($order->get_items() as $item_id => $item) {
+		//error_log('$product_sizes items: ' . print_r($item, true));
+        $product_id = $item->get_product_id();
+	
+
+
+        if (isset($product_sizes[$item_id])) {
+            $new_size = sanitize_text_field($product_sizes[$item_id]);
+            if ($new_size !== '') {
+                $item->update_meta_data('pa_storrelse', $new_size);
+               // error_log('Updated size: ' . $new_size);
+            }
+        }
+
+        if (isset($product_colors[$item_id])) {
+            $new_color = sanitize_text_field($product_colors[$item_id]);
+            if ($new_color !== '') {
+                $item->update_meta_data('pa_farge', $new_color);
+               // error_log('Updated color: ' . $new_color);
+            }
+        }
+
+        if (isset($leg_Til_Navs[$item_id])) {
+            $new_leg_Til_Navs = sanitize_text_field(urldecode($leg_Til_Navs[$item_id]));
+            if ($new_leg_Til_Navs !== '') {
+                $item->update_meta_data('LeggTilNavn', $new_leg_Til_Navs);
+              //  error_log('Updated LeggTilNavn: ' . $new_leg_Til_Navs);
+            }
+        }
+    }
+
+    $order->save();
+    error_log('Order saved successfully.');
+
+    wp_send_json_success(['message' => 'Order items updated successfully.']);
 }
+
 
 // Helper function to get order item ID by product ID
 function get_order_item_id_by_product_id($order_id, $product_id) {

@@ -1,6 +1,6 @@
 Custom Product Filter-Email-Edit <br>
 Contributors: CP Technologies  <br>
-Tags: 1.0  <br>
+Tags: 2.0  <br>
 Requires at least: 6.0  <br>
 Tested up to: 6.7.1  <br>
 Stable tag: 1.0  <br>
@@ -16,6 +16,11 @@ License: Private  <br>
 == Changelog ==  <br>
 = 1.0 =   <br>
 * Initial release.  <br>
+
+ <br>
+== Changelog ==  <br>
+= 2.0 =   <br>
+* Fix Major Issue Not Updating the Product variant arrtriburtes.<br>
  <br>
  <br>
 == Credits ==  <br>
