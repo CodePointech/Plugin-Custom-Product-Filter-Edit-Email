@@ -1,9 +1,9 @@
 Custom Product Filter-Email-Edit
 Contributors: CP Technologies
-Tags: 1.0
+Tags: 2.0
 Requires at least: 6.0
 Tested up to: 6.7.1
-Stable tag: 1.0
+Stable tag: 2.0
 License: Private
 
 == Description ==
