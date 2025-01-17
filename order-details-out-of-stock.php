@@ -267,13 +267,13 @@ function update_product_sizes() {
             }
         }
 
-        if (isset($leg_Til_Navs[$item_id])) {
-            $new_leg_Til_Navs = sanitize_text_field(urldecode($leg_Til_Navs[$item_id]));
-            if ($new_leg_Til_Navs !== '') {
-                $item->update_meta_data('LeggTilNavn', $new_leg_Til_Navs);
-              //  error_log('Updated LeggTilNavn: ' . $new_leg_Til_Navs);
-            }
-        }
+        // if (isset($leg_Til_Navs[$item_id])) {
+        //     $new_leg_Til_Navs = sanitize_text_field(urldecode($leg_Til_Navs[$item_id]));
+        //     if ($new_leg_Til_Navs !== '') {
+        //         $item->update_meta_data('LeggTilNavn', $new_leg_Til_Navs);
+        //       //  error_log('Updated LeggTilNavn: ' . $new_leg_Til_Navs);
+        //     }
+        // }
     }
 
     $order->save();
